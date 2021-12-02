@@ -1,8 +1,18 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import DepotPage from './components/depotPage.js'
 
-function render() {
-  ReactDOM.render(<h2>Hello from React!</h2>, document.body);
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+
+function App(){
+    return(
+    <DepotPage />                 
+    )
 }
 
-render();
+
+
+
+
+ReactDOM.render(<App/>,document.getElementById('root'));
