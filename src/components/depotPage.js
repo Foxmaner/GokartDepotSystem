@@ -4,6 +4,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import {internalIpV6, internalIpV4} from 'internal-ip';
+import StopWatch from './stopwatch';
 
 
 class DepotPage extends React.Component {
@@ -75,7 +76,7 @@ class DepotPage extends React.Component {
         </Row>
         <Row className="justify-content-md-center">
           <Col className="text-center" style={{fontSize: "2vh"}}>IP-Adress: {this.state.localIp}</Col>
-          <Col className="text-center" style={{fontSize: "2vh"}}>Senaste knapptryck: {this.state.ioStats.timeSinceButtonPress}s</Col>
+          <Col className="text-center" style={{fontSize: "2vh"}}>Senaste knapptryck: <StopWatch/></Col>
           <Col className="text-center" style={{fontSize: "2vh"}}>Senaste anslutning: {this.state.ioStats.timeSinceDbConnection}s</Col> 
           <Col className="text-center" style={{fontSize: "2vh"}}>Program by: Eskil Brännerud</Col>
         </Row>
