@@ -13,7 +13,10 @@ class DepotPage extends React.Component {
   
 
   state = {
-      localIp : "N/A"
+      localIp : "N/A",
+      raceData: {"largeKart":"4","smallKart":"2","doubleKart":"0"},
+      statsData: {"nextRace":"1","nrOfRaceQueue":"2","queueTime":"3"},
+      ioStats: {"timeSinceDbConnection":0,"timeSinceButtonPress":0},
   };
   async componentDidMount(){
     document.addEventListener("keydown", this.keyEventFunction, false);
@@ -21,7 +24,7 @@ class DepotPage extends React.Component {
     console.log(ip)
     this.setState({
         localIp : ip
-    }) 
+    })
   };
 
   componentWillUnmount(){
@@ -30,11 +33,12 @@ class DepotPage extends React.Component {
 
   keyEventFunction(event){
     if(event.keyCode === 39) {
-        console.log("hÖger")
+        console.log("höger")
     }else if(event.keyCode === 37){
         console.log("vänster")
     }
   }
+
 
 
   render() {
@@ -46,24 +50,24 @@ class DepotPage extends React.Component {
           <Col className="text-center" id="largeKartOutput" style={{fontSize: "7vh"}}>Depå</Col>
         </Row>
         <Row className="justify-content-md-center">
-          <Col className="text-center" id="largeKartOutput" style={{fontSize: "7vh"}}>Nästa Race: 1</Col>
-          <Col className="text-center" id="largeKartOutput" style={{fontSize: "7vh"}}>Stora: 2</Col>
+          <Col className="text-center" id="largeKartOutput" style={{fontSize: "7vh"}}>Nästa Race: {this.state.statsData.nextRace}</Col>
+          <Col className="text-center" id="largeKartOutput" style={{fontSize: "7vh"}}>Stora: {this.state.raceData.largeKart}</Col>
         </Row>
         <Row className="justify-content-md-center" >
             <Col className="d-grid" md="8" style={{height: "10vh"}}>
             </Col>
         </Row>
         <Row className="justify-content-md-center">
-          <Col className="text-center" id="smallKartOutput" style={{fontSize: "7vh"}}>Race kvar: 8</Col>
-          <Col className="text-center" id="doubleKartOutput" style={{fontSize: "7vh"}}>Små: 5</Col>
+          <Col className="text-center" id="smallKartOutput" style={{fontSize: "7vh"}}>Race kvar: {this.state.statsData.nrOfRaceQueue}</Col>
+          <Col className="text-center" id="doubleKartOutput" style={{fontSize: "7vh"}}>Små: {this.state.raceData.smallKart}</Col>
         </Row>
         <Row className="justify-content-md-center" >
             <Col className="d-grid" md="8" style={{height: "10vh"}}>
             </Col>
         </Row>
         <Row className="justify-content-md-center">
-        <Col className="text-center" id="smallKartOutput" style={{fontSize: "7vh"}}>Kötid: 20min</Col>
-          <Col className="text-center" id="doubleKartOutput" style={{fontSize: "7vh"}}>Dubbla:1</Col>
+        <Col className="text-center" id="smallKartOutput" style={{fontSize: "7vh"}}>Kötid: {this.state.statsData.queueTime}</Col>
+          <Col className="text-center" id="doubleKartOutput" style={{fontSize: "7vh"}}>Dubbla: {this.state.raceData.doubleKart}</Col>
         </Row>
         <Row className="justify-content-md-center" >
             <Col className="d-grid" md="8" style={{height: "20vh"}}>
@@ -71,8 +75,8 @@ class DepotPage extends React.Component {
         </Row>
         <Row className="justify-content-md-center">
           <Col className="text-center" style={{fontSize: "2vh"}}>IP-Adress: {this.state.localIp}</Col>
-          <Col className="text-center" style={{fontSize: "2vh"}}>Senaste knapptryck: 10s</Col>
-          <Col className="text-center" style={{fontSize: "2vh"}}>Senaste anslutning: 5s</Col> 
+          <Col className="text-center" style={{fontSize: "2vh"}}>Senaste knapptryck: {this.state.ioStats.timeSinceButtonPress}s</Col>
+          <Col className="text-center" style={{fontSize: "2vh"}}>Senaste anslutning: {this.state.ioStats.timeSinceDbConnection}s</Col> 
           <Col className="text-center" style={{fontSize: "2vh"}}>Program by: Eskil Brännerud</Col>
         </Row>
       </Container>
