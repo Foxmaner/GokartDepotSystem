@@ -16,12 +16,25 @@ class DepotPage extends React.Component {
       localIp : "N/A"
   };
   async componentDidMount(){
+    document.addEventListener("keydown", this.keyEventFunction, false);
     const ip = await internalIpV4()  
     console.log(ip)
     this.setState({
         localIp : ip
     }) 
   };
+
+  componentWillUnmount(){
+    document.removeEventListener("keydown", this.keyEventFunction, false);
+  };
+
+  keyEventFunction(event){
+    if(event.keyCode === 39) {
+        console.log("hÖger")
+    }else if(event.keyCode === 37){
+        console.log("vänster")
+    }
+  }
 
 
   render() {
