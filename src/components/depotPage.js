@@ -75,10 +75,10 @@ class DepotPage extends React.Component {
             </Col>
         </Row>
         <Row className="justify-content-md-center">
-          <Col className="text-center" style={{fontSize: "2vh"}}>IP-Adress: {this.state.localIp}</Col>
-          <Col className="text-center" style={{fontSize: "2vh"}}>Senaste knapptryck: <StopWatch/></Col>
-          <Col className="text-center" style={{fontSize: "2vh"}}>Senaste anslutning: {this.state.ioStats.timeSinceDbConnection}s</Col> 
-          <Col className="text-center" style={{fontSize: "2vh"}}>Program by: Eskil Brännerud</Col>
+          <Col className="text-center" style={{fontSize: "2vh"}}>IP-{">"} {this.state.localIp}</Col>
+          <Col className="text-center" style={{fontSize: "2vh"}}>Senaste input-{">"} <StopWatch/></Col>
+          <Col className="text-center" style={{fontSize: "2vh"}}>Senaste query-{">"} {this.state.ioStats.timeSinceDbConnection}s</Col> 
+          <Col className="text-center" style={{fontSize: "2vh"}}>Made by-{">"} Eskil Brännerud</Col>
         </Row>
       </Container>
     );

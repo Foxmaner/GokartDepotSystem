@@ -7,6 +7,7 @@ class StopWatch extends React.Component {
       this.startTimer = this.startTimer.bind(this);
       this.resetTimer = this.resetTimer.bind(this);
       this.countUp = this.countUp.bind(this);
+      this.keyEventFunction = this.keyEventFunction.bind(this)
     }
   
     secondsToTime(secs){
@@ -27,17 +28,33 @@ class StopWatch extends React.Component {
     }
   
     componentDidMount() {
+      document.addEventListener("keydown", this.keyEventFunction, false);
       let timeLeftVar = this.secondsToTime(this.state.seconds);
       this.setState({ time: timeLeftVar });
       this.startTimer();
     }
+
+    componentWillUnmount(){
+      document.removeEventListener("keydown", this.keyEventFunction, false);
+      clearInterval(this.timer);
+    };
   
     startTimer() {
         this.timer = setInterval(this.countUp, 1000);
-    }
+    };
     resetTimer() {
+      console.log("lol")
         this.setState({seconds: -1});
-    }
+        console.log("gay")
+    };
+
+    keyEventFunction(event){
+      if(event.keyCode === 39) {
+        this.resetTimer()
+      }else if(event.keyCode === 37){
+        this.resetTimer()
+      };
+    };
   
     countUp() {
       // Remove one second, set state so a re-render happens.
@@ -50,11 +67,9 @@ class StopWatch extends React.Component {
   
     render() {
       return(
-        <div>
-            <button onClick={this.resetTimer}>Restart</button>
-          <button onClick={this.startTimer}>Start</button>
-          {this.state.time.m}:{this.state.time.s}
-        </div>
+         <container> 
+           {this.state.time.m}:{this.state.time.s}
+         </container>
       );
     }
   }
