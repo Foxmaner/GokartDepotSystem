@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-
+import {internalIpV6, internalIpV4} from 'internal-ip';
 
 
 class DepotPage extends React.Component {
@@ -13,8 +13,15 @@ class DepotPage extends React.Component {
   
 
   state = {
+      localIp : "N/A"
   };
-
+  async componentDidMount(){
+    const ip = await internalIpV4()  
+    console.log(ip)
+    this.setState({
+        localIp : ip
+    }) 
+  };
 
 
   render() {
@@ -50,7 +57,7 @@ class DepotPage extends React.Component {
             </Col>
         </Row>
         <Row className="justify-content-md-center">
-          <Col className="text-center" style={{fontSize: "2vh"}}>IP-Adress: 192.168.120.100</Col>
+          <Col className="text-center" style={{fontSize: "2vh"}}>IP-Adress: {this.state.localIp}</Col>
           <Col className="text-center" style={{fontSize: "2vh"}}>Senaste knapptryck: 10s</Col>
           <Col className="text-center" style={{fontSize: "2vh"}}>Senaste anslutning: 5s</Col> 
           <Col className="text-center" style={{fontSize: "2vh"}}>Program by: Eskil Brännerud</Col>
