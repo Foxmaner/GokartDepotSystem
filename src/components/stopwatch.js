@@ -1,4 +1,5 @@
 import React from 'react';
+import Container from 'react-bootstrap/Container';
 class StopWatch extends React.Component {
     constructor() {
       super();
@@ -67,9 +68,9 @@ class StopWatch extends React.Component {
   
     render() {
       return(
-         <container> 
+         <Container> 
            {this.state.time.m}:{this.state.time.s}
-         </container>
+         </Container>
       );
     }
   }
