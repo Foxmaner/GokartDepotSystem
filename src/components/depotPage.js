@@ -10,13 +10,14 @@ import StopWatch from './stopwatch';
 class DepotPage extends React.Component {
   constructor(props) {
     super(props)
+    this.keyEventFunction = this.keyEventFunction.bind(this);
   };
   
 
   state = {
       localIp : "N/A",
       raceData: {"largeKart":"4","smallKart":"2","doubleKart":"0"},
-      statsData: {"nextRace":"1","nrOfRaceQueue":"2","queueTime":"3"},
+      statsData: {"nextRace":1,"nrOfRaceQueue":"2","queueTime":"3"},
       ioStats: {"timeSinceDbConnection":0,"timeSinceButtonPress":0},
   };
   async componentDidMount(){
@@ -34,9 +35,23 @@ class DepotPage extends React.Component {
 
   keyEventFunction(event){
     if(event.keyCode === 39) {
-        console.log("höger")
+        var nextRace = this.state.statsData.nextRace+1
+        this.setState({
+          statsData:{
+            nextRace: nextRace
+        }
+        })
     }else if(event.keyCode === 37){
-        console.log("vänster")
+      if(this.state.statsData.nextRace==1){
+        var nextRace = 1
+      }else{
+        var nextRace = this.state.statsData.nextRace-1
+      }
+      this.setState({
+        statsData:{
+          nextRace: nextRace
+      }
+      })
     }
   }
 
