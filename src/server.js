@@ -31,3 +31,6 @@ setInterval(() => {
 ipcMain.on("notify", (_, message) => {
     console.log("notify" + message)
  });
+ ipcMain.on("getCurrentRaceData", (_, message) => {
+    console.log("getCurrentRaceData" + message)
+ });

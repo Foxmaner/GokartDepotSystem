@@ -6,6 +6,9 @@ contextBridge.exposeInMainWorld("electron", {
       ipcRenderer.send("notify", message);
     },
   },
-  batteryApi: {},
-  fileApi: {},
+  raceDataApi: {
+    getCurrentRaceData(raceNr) {
+      ipcRenderer.send("getCurrentRaceData", raceNr);
+    }
+  },
 });
