@@ -34,6 +34,7 @@ class DepotPage extends React.Component {
   };
 
   keyEventFunction(event){
+    electron.notificationApi.sendNotification("Finally!");
     if(event.keyCode === 39) {
         var nextRace = this.state.statsData.nextRace+1
         this.setState({

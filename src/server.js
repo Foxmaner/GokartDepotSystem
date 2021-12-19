@@ -1,6 +1,7 @@
 const
     {Server} = require("socket.io"),
-    server = new Server(1337);
+    server = new Server(1337),
+    { ipcMain } = require('electron');
 
 let
     sequenceNumberByClient = new Map();
@@ -26,3 +27,7 @@ setInterval(() => {
         sequenceNumberByClient.set(client, sequenceNumber + 1);
     }
 }, 1000);
+
+ipcMain.on("notify", (_, message) => {
+    console.log("notify" + message)
+ });
