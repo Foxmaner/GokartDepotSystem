@@ -21,16 +21,25 @@ server.on("connection", (socket) => {
 });
 
 // sends each client its current sequence number
+/*
 setInterval(() => {
     for (const [client, sequenceNumber] of sequenceNumberByClient.entries()) {
         client.emit("seq-num", sequenceNumber);
         sequenceNumberByClient.set(client, sequenceNumber + 1);
     }
 }, 1000);
+*/
+function getCurrentRaceDataFromClient(raceNr){
+    for (const [client, sequenceNumber] of sequenceNumberByClient.entries()) {
+        client.emit("requestRaceDataNr", raceNr);
+    }
+    return 0
+};
 
 ipcMain.on("notify", (_, message) => {
     console.log("notify" + message)
  });
  ipcMain.on("getCurrentRaceData", (_, message) => {
     console.log("getCurrentRaceData" + message)
+    getCurrentRaceDataFromClient(parseInt(message))
  });
