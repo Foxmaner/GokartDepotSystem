@@ -6,19 +6,31 @@ import Col from 'react-bootstrap/Col';
 import {internalIpV6, internalIpV4} from 'internal-ip';
 import StopWatch from './stopwatch';
 
+import PouchDB from 'pouchdb';
+import upsert from 'pouchdb-upsert';
+PouchDB.plugin(upsert);
+
+import DB from './db.js'
+
 
 class DepotPage extends React.Component {
   constructor(props) {
     super(props)
-  };
-  
 
-  state = {
+    this.state = {
+      db: new DB("RaceDataDB"),
+      remoteDB: new PouchDB('http://localhost:5984/myremotedb'),
+      settingsDB: new DB("SettingsDB"),
+
+
       localIp : "N/A",
       raceData: {"largeKart":"4","smallKart":"2","doubleKart":"0"},
       statsData: {"nextRace":"1","nrOfRaceQueue":"2","queueTime":"3"},
       ioStats: {"timeSinceDbConnection":0,"timeSinceButtonPress":0},
   };
+
+  };
+
   async componentDidMount(){
     document.addEventListener("keydown", this.keyEventFunction, false);
     const ip = await internalIpV4()  
