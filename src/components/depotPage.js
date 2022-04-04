@@ -37,6 +37,8 @@ class DepotPage extends React.Component {
     this.setState({
         localIp : ip
     })
+    var allRaceData = await this.state.remoteDB.getRaceDataDB();
+    this.updateRaceData(allRaceData,this.state.activeRace);
   };
 
   componentWillUnmount(){
@@ -44,15 +46,28 @@ class DepotPage extends React.Component {
   };
 
   updateRaceData(raceData,activeRace){
-    if(raceData.length<activeRace)
-    console.log(raceData[activeRace]);
-    console.log(activeRace);
+    console.log(raceData)
+    console.log(activeRace)
+    if(activeRace == raceData.length){
+      this.setState({
+        raceData: {"largeKart":"⌛","smallKart":"⌛","doubleKart":"⌛"}
+      })
+    }
+    else{
+    this.setState({
+      raceData: {"largeKart":raceData[activeRace]["largeKart"],"smallKart":raceData[activeRace]["smallKart"],"doubleKart":raceData[activeRace]["doubleKart"]}
+    })
+  }
+  this.setState({
+    statsData: {"nextRace":activeRace+1,"nrOfRaceQueue":raceData.length-activeRace,"queueTime":(raceData.length-activeRace)*8},
+  })
+
   }
 
   async keyEventFunction(event){
     var allRaceData = await this.state.remoteDB.getRaceDataDB();
     //console.log(this.state.raceData);
-    this.updateRaceData(allRaceData,0);
+    
     if(event.keyCode === 39) {
         console.log("höger")
         if(this.state.activeRace<allRaceData.length){
@@ -68,6 +83,7 @@ class DepotPage extends React.Component {
           })
         }
     }
+    this.updateRaceData(allRaceData,this.state.activeRace);
   };
 
 
@@ -97,7 +113,7 @@ class DepotPage extends React.Component {
             </Col>
         </Row>
         <Row className="justify-content-md-center">
-        <Col className="text-center" id="smallKartOutput" style={{fontSize: "7vh"}}>Kötid: {this.state.statsData.queueTime}</Col>
+        <Col className="text-center" id="smallKartOutput" style={{fontSize: "7vh"}}>Kötid: {this.state.statsData.queueTime}min</Col>
           <Col className="text-center" id="doubleKartOutput" style={{fontSize: "7vh"}}>Dubbla: {this.state.raceData.doubleKart}</Col>
         </Row>
         <Row className="justify-content-md-center" >
