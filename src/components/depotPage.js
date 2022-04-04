@@ -20,9 +20,8 @@ class DepotPage extends React.Component {
     this.state = {
       remoteDB: new DB('http://localhost:5984/myremotedb'),
       settingsDB: new DB("SettingsDB"),
-      raceData: [{ "raceID": "24", "raceNr": "1", "largeKart": "0", "smallKart": "0", "doubleKart": "0", "raceDate": "2021-11-16 11:37:36" }],
-
       localIp : "N/A",
+      activeRace : 0,
       raceData: {"largeKart":"4","smallKart":"2","doubleKart":"0"},
       statsData: {"nextRace":"1","nrOfRaceQueue":"2","queueTime":"3"},
       ioStats: {"timeSinceDbConnection":0,"timeSinceButtonPress":0},
@@ -44,13 +43,30 @@ class DepotPage extends React.Component {
     document.removeEventListener("keydown", this.keyEventFunction, false);
   };
 
+  updateRaceData(raceData,activeRace){
+    if(raceData.length<activeRace)
+    console.log(raceData[activeRace]);
+    console.log(activeRace);
+  }
+
   async keyEventFunction(event){
-    this.state.raceData = await this.state.remoteDB.getRaceDataDB();
-    console.log(this.state.raceData);
+    var allRaceData = await this.state.remoteDB.getRaceDataDB();
+    //console.log(this.state.raceData);
+    this.updateRaceData(allRaceData,0);
     if(event.keyCode === 39) {
         console.log("höger")
+        if(this.state.activeRace<allRaceData.length){
+        this.setState({
+          activeRace: (this.state.activeRace+1)
+      })
+    }
     }else if(event.keyCode === 37){
         console.log("vänster")
+        if(this.state.activeRace>0){
+            this.setState({
+              activeRace: (this.state.activeRace-1)
+          })
+        }
     }
   };
 
@@ -65,7 +81,7 @@ class DepotPage extends React.Component {
           <Col className="text-center" id="largeKartOutput" style={{fontSize: "7vh"}}>Depå</Col>
         </Row>
         <Row className="justify-content-md-center">
-          <Col className="text-center" id="largeKartOutput" style={{fontSize: "7vh"}}>Nästa Race: {this.state.statsData.nextRace}</Col>
+          <Col className="text-center" id="largeKartOutput" style={{fontSize: "7vh"}}>Nästa Race: {this.state.activeRace+1}</Col>
           <Col className="text-center" id="largeKartOutput" style={{fontSize: "7vh"}}>Stora: {this.state.raceData.largeKart}</Col>
         </Row>
         <Row className="justify-content-md-center" >
