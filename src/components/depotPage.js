@@ -39,6 +39,23 @@ class DepotPage extends React.Component {
     })
     var allRaceData = await this.state.remoteDB.getRaceDataDB();
     this.updateRaceData(allRaceData,this.state.activeRace);
+
+    const self = this;
+    
+    var changes = this.state.remoteDB.db.changes({
+      since: 'now',
+      live: true,
+      include_docs: true
+    }).on('change', async function(change) {
+      // handle change
+      console.log("changes")
+      var allRaceData = await self.state.remoteDB.getRaceDataDB();
+      self.updateRaceData(allRaceData,self.state.activeRace);
+    }).on('complete', function(info) {
+      // changes() was canceled
+    }).on('error', function (err) {
+      console.log(err);
+    });
   };
 
   componentWillUnmount(){
