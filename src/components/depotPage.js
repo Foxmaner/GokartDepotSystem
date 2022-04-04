@@ -18,10 +18,9 @@ class DepotPage extends React.Component {
     super(props)
 
     this.state = {
-      db: new DB("RaceDataDB"),
-      remoteDB: new PouchDB('http://localhost:5984/myremotedb'),
+      remoteDB: new DB('http://localhost:5984/myremotedb'),
       settingsDB: new DB("SettingsDB"),
-
+      raceData: [{ "raceID": "24", "raceNr": "1", "largeKart": "0", "smallKart": "0", "doubleKart": "0", "raceDate": "2021-11-16 11:37:36" }],
 
       localIp : "N/A",
       raceData: {"largeKart":"4","smallKart":"2","doubleKart":"0"},
@@ -29,6 +28,7 @@ class DepotPage extends React.Component {
       ioStats: {"timeSinceDbConnection":0,"timeSinceButtonPress":0},
   };
 
+  this.keyEventFunction = this.keyEventFunction.bind(this);
   };
 
   async componentDidMount(){
@@ -44,13 +44,15 @@ class DepotPage extends React.Component {
     document.removeEventListener("keydown", this.keyEventFunction, false);
   };
 
-  keyEventFunction(event){
+  async keyEventFunction(event){
+    this.state.raceData = await this.state.remoteDB.getRaceDataDB();
+    console.log(this.state.raceData);
     if(event.keyCode === 39) {
         console.log("höger")
     }else if(event.keyCode === 37){
         console.log("vänster")
     }
-  }
+  };
 
 
 
