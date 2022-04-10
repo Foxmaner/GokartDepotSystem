@@ -50,6 +50,9 @@ class DepotPage extends React.Component {
       // handle change
       console.log("changes")
       var allRaceData = await self.state.remoteDB.getRaceDataDB();
+      var fetchedCurrentRaceNr = await self.state.remoteDB.getCurrentRaceNrDB();
+      console.log(fetchedCurrentRaceNr);
+      self.setState({activeRace:fetchedCurrentRaceNr})
       self.updateRaceData(allRaceData,self.state.activeRace);
     }).on('complete', function(info) {
       // changes() was canceled
