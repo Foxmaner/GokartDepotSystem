@@ -5,6 +5,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { internalIpV6, internalIpV4 } from 'internal-ip';
 import StopWatch from './stopwatch';
+import Alert from 'react-bootstrap/Alert';
 
 import PouchDB from 'pouchdb';
 import upsert from 'pouchdb-upsert';
@@ -21,6 +22,8 @@ class DepotPage extends React.Component {
       remoteDB: new DB('http://localhost:5984/myremotedb'),
       useKeyboard: false,
       localIp: "N/A",
+      isValid: true,
+      syncErrorMessage: "",
       activeRace: 0,
       raceData: { "largeKart": "4", "smallKart": "2", "doubleKart": "0" },
       statsData: { "nextRace": "1", "nrOfRaceQueue": "2", "queueTime": "3" },
@@ -30,6 +33,27 @@ class DepotPage extends React.Component {
     this.keyEventFunction = this.keyEventFunction.bind(this);
   };
 
+  async fetchFromDB(){
+    console.log("Fetchar från databasen")
+    var allRaceData;
+    try {
+      allRaceData = await this.state.remoteDB.getRaceDataDB();
+      this.updateRaceData(allRaceData, this.state.activeRace);
+      console.log(allRaceData)
+      this.setState({
+        isValid: true,
+        syncErrorMessage: ""
+      })
+    } catch (errorMessage) {
+      console.log(errorMessage);
+      var errorType = errorMessage["error"]
+      var errorReason = errorMessage["reason"]
+      this.setState({
+        isValid: false,
+        syncErrorMessage: "ErrorType:" + errorType + " --- ErrorReason: " + errorReason
+      })
+    }
+  }
   async componentDidMount() {
     document.addEventListener("keydown", this.keyEventFunction, false);
     const ip = await internalIpV4()
@@ -37,9 +61,8 @@ class DepotPage extends React.Component {
     this.setState({
       localIp: ip
     })
-    var allRaceData = await this.state.remoteDB.getRaceDataDB();
-    this.updateRaceData(allRaceData, this.state.activeRace);
-
+    await this.fetchFromDB();
+    setInterval(() => this.fetchFromDB(), 6000);
     const self = this;
 
     var changes = this.state.remoteDB.db.changes({
@@ -48,16 +71,19 @@ class DepotPage extends React.Component {
       include_docs: true
     }).on('change', async function (change) {
       // handle change
-      console.log("changes")
       var allRaceData = await self.state.remoteDB.getRaceDataDB();
       var fetchedCurrentRaceNr = await self.state.remoteDB.getCurrentRaceNrDB();
-      console.log(fetchedCurrentRaceNr);
       self.setState({ activeRace: fetchedCurrentRaceNr })
       self.updateRaceData(allRaceData, self.state.activeRace);
     }).on('complete', function (info) {
       // changes() was canceled
-    }).on('error', function (err) {
-      console.log(err);
+    }).on('error', function (errorMessage) {
+      var errorType = errorMessage["error"]
+      var errorReason = errorMessage["reason"]
+      self.setState({
+        isValid: false,
+        syncErrorMessage: "ErrorType:" + errorType + " --- ErrorReason: " + errorReason
+      })
     });
   };
 
@@ -110,6 +136,13 @@ class DepotPage extends React.Component {
     return (
       <Container className="app bg-light shadow-5-strong" >
         <Row className="justify-content-md-center">
+          {this.state.isValid
+            ? <Alert className="text-center" variant="success">Har kontakt med databasen</Alert>
+            : <Alert className="text-center" variant="danger">Något har gått knas med kopplingen till databasen <br></br>
+              Error -- {this.state.syncErrorMessage}</Alert>
+          }
+        </Row>
+        <Row className="justify-content-md-center">
           <Col className="text-center" id="largeKartOutput" style={{ fontSize: "7vh" }}>Depå</Col>
         </Row>
         <Row className="justify-content-md-center">
@@ -133,7 +166,7 @@ class DepotPage extends React.Component {
           <Col className="text-center" id="doubleKartOutput" style={{ fontSize: "7vh" }}>Dubbla: {this.state.raceData.doubleKart}</Col>
         </Row>
         <Row className="justify-content-md-center" >
-          <Col className="d-grid" md="8" style={{ height: "20vh" }}>
+          <Col className="d-grid" md="8" style={{ height: "10vh" }}>
           </Col>
         </Row>
         <Row className="justify-content-md-center">
