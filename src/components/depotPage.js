@@ -5,6 +5,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { internalIpV6, internalIpV4 } from 'internal-ip';
 import StopWatch from './stopwatch';
+import SettingsSlide from './settings';
 import Alert from 'react-bootstrap/Alert';
 
 import PouchDB from 'pouchdb';
@@ -19,14 +20,16 @@ class DepotPage extends React.Component {
     super(props)
 
     this.state = {
+      settings:"",
+      settingsDB: new DB("depotSettingsDB"),
       remoteDB: new DB('http://localhost:5984/myremotedb'),
       useKeyboard: false,
       localIp: "N/A",
       isValid: true,
       syncErrorMessage: "",
       activeRace: 0,
-      raceData: { "largeKart": "4", "smallKart": "2", "doubleKart": "0" },
-      statsData: { "nextRace": "1", "nrOfRaceQueue": "2", "queueTime": "3" },
+      raceData: { "largeKart": "⌛", "smallKart": "⌛", "doubleKart": "⌛" },
+      statsData: { "nextRace": "⌛", "nrOfRaceQueue": "⌛", "queueTime": "⌛" },
       ioStats: { "timeSinceDbConnection": 0, "timeSinceButtonPress": 0 },
     };
 
@@ -55,6 +58,10 @@ class DepotPage extends React.Component {
     }
   }
   async componentDidMount() {
+    const self = this;
+    var cooler = await self.state.settingsDB.getSyncSettings();
+    self.setState({ settings: cooler })
+    await self.setState({ remoteDB: new DB("http://" + cooler.formServerAdress + ":" + cooler.formServerPort + "/" + cooler.formDbName) })
     document.addEventListener("keydown", this.keyEventFunction, false);
     const ip = await internalIpV4()
     console.log(ip)
@@ -63,8 +70,7 @@ class DepotPage extends React.Component {
     })
     await this.fetchFromDB();
     setInterval(() => this.fetchFromDB(), 6000);
-    const self = this;
-
+    console.log(this.state.remoteDB)
     var changes = this.state.remoteDB.db.changes({
       since: 'now',
       live: true,
@@ -170,11 +176,15 @@ class DepotPage extends React.Component {
           </Col>
         </Row>
         <Row className="justify-content-md-center">
-          <Col className="text-center" style={{ fontSize: "2vh" }}>IP-{">"} {this.state.localIp}</Col>
+          {/*
+            <Col className="text-center" style={{ fontSize: "2vh" }}>IP-{">"} {this.state.localIp}</Col>
+          */}
           <Col className="text-center" style={{ fontSize: "2vh" }}>Senaste input-{">"} <StopWatch /></Col>
           <Col className="text-center" style={{ fontSize: "2vh" }}>Senaste query-{">"} {this.state.ioStats.timeSinceDbConnection}s</Col>
           <Col className="text-center" style={{ fontSize: "2vh" }}>Made by-{">"} Eskil Brännerud</Col>
+          <SettingsSlide className="position-absolute top-0 start-0" settings={this.state.settings}></SettingsSlide>
         </Row>
+        
       </Container>
     );
   }
