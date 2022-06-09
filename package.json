@@ -1,6 +1,6 @@
 {
   "name": "gokartdepotsystem",
-  "productName": "GokartDepotSystem",
+  "productName": "gokartdepotsystem",
   "version": "1.0.0",
   "description": "My Electron application description",
   "main": ".webpack/main",
@@ -44,7 +44,7 @@
           "@electron-forge/plugin-webpack",
           {
             "port": 3001,
-            "loggerPort": 9001,  
+            "loggerPort": 9001,
             "mainConfig": "./webpack.main.config.js",
             "renderer": {
               "config": "./webpack.renderer.config.js",
